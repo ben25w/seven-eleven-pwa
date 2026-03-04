@@ -40,15 +40,28 @@ startBtn.addEventListener('click', () => {
 });
 
 // ===== LOAD ITEMS =====
+// ===== LOAD ITEMS =====
 async function loadItems() {
   try {
     const res = await fetch('/api/images');
     const data = await res.json();
 
+    if (!data.images || data.images.length === 0) {
+      itemsGrid.innerHTML = '<div class="loading">No items uploaded yet. Ask your teacher! 😊</div>';
+      return;
+    }
+
     const active = JSON.parse(localStorage.getItem('active_items') || '[]');
-    const filtered = active.length > 0
+
+    // Try to filter by active, but fall back to ALL images if none match
+    let filtered = active.length > 0
       ? data.images.filter(img => active.includes(img.filename))
       : data.images;
+
+    // Safety net — if active list exists but nothing matched, show everything
+    if (filtered.length === 0) {
+      filtered = data.images;
+    }
 
     allItems = filtered.map(img => ({
       imageUrl: img.url,
@@ -56,17 +69,13 @@ async function loadItems() {
       price: getRandomPrice(img.filename)
     }));
 
-    if (allItems.length === 0) {
-      itemsGrid.innerHTML = '<div class="loading">No items active yet. Ask your teacher! 😊</div>';
-      return;
-    }
-
     renderItems(allItems);
   } catch (error) {
     itemsGrid.innerHTML = '<div class="loading">Could not load items. Please refresh. 😕</div>';
     console.error('Error loading items:', error);
   }
 }
+
 
 // ===== RENDER ITEMS =====
 function renderItems(items) {
