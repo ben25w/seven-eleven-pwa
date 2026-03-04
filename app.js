@@ -22,14 +22,13 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// ===== RANDOM PRICE (reads teacher ranges from localStorage, falls back to 1–5 baht) =====
+// ===== RANDOM PRICE =====
 function getRandomPrice(filename) {
   const saved = JSON.parse(localStorage.getItem('item_prices') || '{}');
   const range = saved[filename];
   if (range) {
     return Math.floor(Math.random() * (range.max - range.min + 1)) + range.min;
   }
-  // Fallback if teacher hasn't set prices yet
   return Math.floor(Math.random() * 5) + 1;
 }
 
@@ -40,17 +39,16 @@ startBtn.addEventListener('click', () => {
   loadItems();
 });
 
-// ===== LOAD ITEMS FROM D1 VIA FUNCTION =====
+// ===== LOAD ITEMS =====
 async function loadItems() {
   try {
     const res = await fetch('/api/images');
     const data = await res.json();
 
-    // Only use images the teacher has activated
     const active = JSON.parse(localStorage.getItem('active_items') || '[]');
     const filtered = active.length > 0
       ? data.images.filter(img => active.includes(img.filename))
-      : data.images; // fallback: show all if teacher hasn't picked yet
+      : data.images;
 
     allItems = filtered.map(img => ({
       imageUrl: img.url,
@@ -62,15 +60,6 @@ async function loadItems() {
       itemsGrid.innerHTML = '<div class="loading">No items active yet. Ask your teacher! 😊</div>';
       return;
     }
-
-    renderItems(allItems);
-  } catch (error) {
-    itemsGrid.innerHTML = '<div class="loading">Could not load items. Please refresh. 😕</div>';
-    console.error('Error loading items:', error);
-  }
-}
-
-
 
     renderItems(allItems);
   } catch (error) {
@@ -100,7 +89,6 @@ function renderItems(items) {
 
 // ===== SELECT ITEM =====
 function selectItem(index, card) {
-  // Already selected — deselect it
   if (card.classList.contains('selected')) {
     card.classList.remove('selected');
     selectedItems = selectedItems.filter(i => i !== index);
@@ -109,14 +97,12 @@ function selectItem(index, card) {
     return;
   }
 
-  // Max 2 selected
   if (selectedItems.length >= 2) return;
 
   selectedItems.push(index);
   card.classList.add('selected');
   updateAllCardStates();
 
-  // Show total when 2 selected
   if (selectedItems.length === 2) {
     showTotal();
   }
@@ -163,7 +149,6 @@ resetBtn.addEventListener('click', () => {
   selectedItems = [];
   calcStrip.classList.add('hidden');
 
-  // Assign fresh random prices on reset — still respects teacher ranges
   allItems = allItems.map(item => ({
     ...item,
     price: getRandomPrice(item.filename)
