@@ -7,6 +7,11 @@
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
+  <!-- PWA: Add these 3 lines to your existing <head> -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#008000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
 <body>
 
   <!-- SPLASH SCREEN -->
@@ -59,5 +64,14 @@
   </div>
 
   <script src="app.js"></script>
+  <!-- PWA: Register service worker -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js');
+    });
+  }
+</script>
+
 </body>
 </html>
