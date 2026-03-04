@@ -43,19 +43,33 @@ startBtn.addEventListener('click', () => {
 // ===== LOAD ITEMS FROM D1 VIA FUNCTION =====
 async function loadItems() {
   try {
-    const response = await fetch('/api/items');
-    const data = await response.json();
+    const res = await fetch('/api/images');
+    const data = await res.json();
 
-    // Extract just the filename from the imageUrl to use as the price range key
-    // e.g. "https://pub-xxx.r2.dev/item1.png" → "item1.png"
-    allItems = data.items.map(item => {
-      const filename = item.imageUrl.split('/').pop();
-      return {
-        ...item,
-        filename,
-        price: getRandomPrice(filename)
-      };
-    });
+    // Only use images the teacher has activated
+    const active = JSON.parse(localStorage.getItem('active_items') || '[]');
+    const filtered = active.length > 0
+      ? data.images.filter(img => active.includes(img.filename))
+      : data.images; // fallback: show all if teacher hasn't picked yet
+
+    allItems = filtered.map(img => ({
+      imageUrl: img.url,
+      filename: img.filename,
+      price: getRandomPrice(img.filename)
+    }));
+
+    if (allItems.length === 0) {
+      itemsGrid.innerHTML = '<div class="loading">No items active yet. Ask your teacher! 😊</div>';
+      return;
+    }
+
+    renderItems(allItems);
+  } catch (error) {
+    itemsGrid.innerHTML = '<div class="loading">Could not load items. Please refresh. 😕</div>';
+    console.error('Error loading items:', error);
+  }
+}
+
 
     renderItems(allItems);
   } catch (error) {
