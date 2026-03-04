@@ -71,6 +71,7 @@ async function loadItems() {
 }
 
 
+
     renderItems(allItems);
   } catch (error) {
     itemsGrid.innerHTML = '<div class="loading">Could not load items. Please refresh. 😕</div>';
