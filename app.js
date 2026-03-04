@@ -15,8 +15,21 @@ const calcTotal = document.getElementById('calcTotal');
 const startBtn = document.getElementById('startBtn');
 const resetBtn = document.getElementById('resetBtn');
 
-// ===== RANDOM PRICE (1–5 baht) =====
-function randomPrice() {
+// ===== REGISTER SERVICE WORKER (PWA) =====
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js');
+  });
+}
+
+// ===== RANDOM PRICE (reads teacher ranges from localStorage, falls back to 1–5 baht) =====
+function getRandomPrice(filename) {
+  const saved = JSON.parse(localStorage.getItem('item_prices') || '{}');
+  const range = saved[filename];
+  if (range) {
+    return Math.floor(Math.random() * (range.max - range.min + 1)) + range.min;
+  }
+  // Fallback if teacher hasn't set prices yet
   return Math.floor(Math.random() * 5) + 1;
 }
 
@@ -33,11 +46,16 @@ async function loadItems() {
     const response = await fetch('/api/items');
     const data = await response.json();
 
-    // Assign a random price to each item on load
-    allItems = data.items.map(item => ({
-      ...item,
-      price: randomPrice()
-    }));
+    // Extract just the filename from the imageUrl to use as the price range key
+    // e.g. "https://pub-xxx.r2.dev/item1.png" → "item1.png"
+    allItems = data.items.map(item => {
+      const filename = item.imageUrl.split('/').pop();
+      return {
+        ...item,
+        filename,
+        price: getRandomPrice(filename)
+      };
+    });
 
     renderItems(allItems);
   } catch (error) {
@@ -130,10 +148,10 @@ resetBtn.addEventListener('click', () => {
   selectedItems = [];
   calcStrip.classList.add('hidden');
 
-  // Assign fresh random prices on reset too
+  // Assign fresh random prices on reset — still respects teacher ranges
   allItems = allItems.map(item => ({
     ...item,
-    price: randomPrice()
+    price: getRandomPrice(item.filename)
   }));
 
   renderItems(allItems);
