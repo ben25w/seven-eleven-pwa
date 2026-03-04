@@ -21,7 +21,7 @@ document.getElementById('pin-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') checkPin();
 });
 
-// ===== LOAD IMAGE LIBRARY FROM R2 =====
+// ===== LOAD IMAGE LIBRARY =====
 async function loadImageLibrary() {
   const grid = document.getElementById('image-library');
   grid.innerHTML = '<p style="color:#aaa">Loading images...</p>';
@@ -45,6 +45,7 @@ async function loadImageLibrary() {
       tile.innerHTML = `
         <img src="${img.url}" alt="${img.filename}">
         <div class="tick">✓</div>
+        <button class="delete-btn" onclick="deleteImage(event, '${img.filename}')">✕</button>
       `;
       tile.addEventListener('click', () => toggleActive(tile, img.filename));
       grid.appendChild(tile);
@@ -65,6 +66,37 @@ function toggleActive(tile, filename) {
     tile.classList.add('active');
   }
   localStorage.setItem('active_items', JSON.stringify(active));
+}
+
+// ===== DELETE IMAGE =====
+async function deleteImage(event, filename) {
+  // Stop the click from also toggling active
+  event.stopPropagation();
+
+  if (!confirm(`Delete this image permanently?`)) return;
+
+  try {
+    const res = await fetch('/api/images', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ filename })
+    });
+    const data = await res.json();
+
+    if (data.success) {
+      // Remove from active_items in localStorage too
+      let active = JSON.parse(localStorage.getItem('active_items') || '[]');
+      active = active.filter(f => f !== filename);
+      localStorage.setItem('active_items', JSON.stringify(active));
+
+      // Refresh the grid
+      loadImageLibrary();
+    } else {
+      alert('Could not delete. Try again.');
+    }
+  } catch (err) {
+    alert('Delete failed. Check connection.');
+  }
 }
 
 // ===== UPLOAD PHOTO =====
@@ -92,7 +124,7 @@ async function uploadPhoto() {
       status.textContent = '✅ Uploaded! Scroll up to activate it.';
       status.style.color = '#4caf50';
       input.value = '';
-      loadImageLibrary(); // Refresh the grid
+      loadImageLibrary();
     } else {
       status.textContent = '❌ Upload failed. Try again.';
       status.style.color = '#ff6b6b';
@@ -101,11 +133,6 @@ async function uploadPhoto() {
     status.textContent = '❌ Upload failed. Check connection.';
     status.style.color = '#ff6b6b';
   }
-}
-
-// ===== PRICE RANGES =====
-function getPrices() {
-  return JSON.parse(localStorage.getItem('item_prices') || '{}');
 }
 
 // ===== CHANGE PIN =====
