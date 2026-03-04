@@ -24,7 +24,6 @@ export async function onRequest(context) {
       return new Response(JSON.stringify({ error: 'No file received' }), { status: 400 });
     }
 
-    // Generate a unique filename using timestamp
     const ext = file.name.split('.').pop() || 'jpg';
     const filename = `item_${Date.now()}.${ext}`;
 
@@ -37,6 +36,21 @@ export async function onRequest(context) {
       filename,
       url: `${R2_PUBLIC_URL}/${filename}`
     }), {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  // DELETE an image
+  if (request.method === 'DELETE') {
+    const { filename } = await request.json();
+    if (!filename) {
+      return new Response(JSON.stringify({ error: 'No filename provided' }), { status: 400 });
+    }
+
+    await bucket.delete(filename);
+
+    // Also remove from active_items if it was in there
+    return new Response(JSON.stringify({ success: true, deleted: filename }), {
       headers: { 'Content-Type': 'application/json' }
     });
   }
