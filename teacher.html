@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Dashboard – 7-Eleven Maths</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #1a1a2e;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    /* LOGIN SCREEN */
+    #login-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+      gap: 20px;
+      width: 100%;
+      max-width: 400px;
+    }
+    #login-screen h1 { font-size: 2rem; text-align: center; }
+    #login-screen p { color: #aaa; text-align: center; }
+    #pin-input {
+      font-size: 2rem;
+      text-align: center;
+      letter-spacing: 0.5rem;
+      padding: 15px;
+      width: 100%;
+      border-radius: 12px;
+      border: 3px solid #444;
+      background: #2a2a3e;
+      color: #fff;
+    }
+    #login-btn {
+      width: 100%;
+      padding: 18px;
+      font-size: 1.3rem;
+      background: #008000;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    #login-btn:active { background: #006000; }
+    #login-error {
+      color: #ff6b6b;
+      font-size: 1rem;
+      display: none;
+    }
+
+    /* DASHBOARD */
+    #dashboard { display: none; width: 100%; max-width: 700px; }
+    #dashboard h1 { font-size: 1.8rem; margin-bottom: 5px; }
+    #dashboard p.subtitle { color: #aaa; margin-bottom: 30px; }
+
+    .section {
+      background: #2a2a3e;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .section h2 { font-size: 1.2rem; margin-bottom: 15px; color: #ffd700; }
+
+    .item-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .item-row label { flex: 1; min-width: 120px; font-size: 1rem; }
+    .item-row input {
+      width: 80px;
+      padding: 8px;
+      border-radius: 8px;
+      border: 2px solid #444;
+      background: #1a1a2e;
+      color: #fff;
+      font-size: 1rem;
+      text-align: center;
+    }
+    .item-row span { color: #aaa; font-size: 0.9rem; }
+
+    .save-btn {
+      width: 100%;
+      padding: 16px;
+      font-size: 1.2rem;
+      background: #008000;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .save-btn:active { background: #006000; }
+    .saved-msg {
+      text-align: center;
+      color: #4caf50;
+      margin-top: 10px;
+      display: none;
+      font-size: 1rem;
+    }
+
+    .pin-section { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .pin-section input {
+      flex: 1;
+      padding: 10px;
+      border-radius: 8px;
+      border: 2px solid #444;
+      background: #1a1a2e;
+      color: #fff;
+      font-size: 1.2rem;
+      text-align: center;
+      letter-spacing: 0.3rem;
+    }
+    .pin-section button {
+      padding: 10px 20px;
+      background: #e74c3c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .logout-btn {
+      margin-top: 10px;
+      padding: 12px 30px;
+      background: transparent;
+      border: 2px solid #666;
+      color: #aaa;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN SCREEN -->
+  <div id="login-screen">
+    <h1>🔐 Teacher Dashboard</h1>
+    <p>Enter your PIN to continue</p>
+    <input type="password" id="pin-input" placeholder="••••" maxlength="6" inputmode="numeric">
+    <button id="login-btn" onclick="checkPin()">Unlock</button>
+    <p id="login-error">❌ Wrong PIN. Try again.</p>
+  </div>
+
+  <!-- DASHBOARD (hidden until login) -->
+  <div id="dashboard">
+    <h1>📊 Teacher Dashboard</h1>
+    <p class="subtitle">7-Eleven Maths Game Settings</p>
+
+    <!-- PRICE RANGES -->
+    <div class="section">
+      <h2>💰 Price Ranges (Baht)</h2>
+      <p style="color:#aaa; margin-bottom:15px; font-size:0.9rem;">Set the min and max random price for each item. Kids will see a random price in this range each game.</p>
+      <div id="price-rows"></div>
+      <button class="save-btn" onclick="savePrices()">💾 Save Price Ranges</button>
+      <p class="saved-msg" id="price-saved">✅ Saved! Prices updated.</p>
+    </div>
+
+    <!-- CHANGE PIN -->
+    <div class="section">
+      <h2>🔑 Change Dashboard PIN</h2>
+      <div class="pin-section">
+        <input type="password" id="new-pin" placeholder="New PIN" maxlength="6" inputmode="numeric">
+        <button onclick="changePin()">Update PIN</button>
+      </div>
+      <p class="saved-msg" id="pin-saved">✅ PIN updated!</p>
+    </div>
+
+    <button class="logout-btn" onclick="logout()">🚪 Log Out</button>
+  </div>
+
+  <script src="teacher.js"></script>
+</body>
+</html>
