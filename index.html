@@ -6,11 +6,10 @@
   <title>7-Eleven Shop</title>
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#008000">
+  <meta name="apple-mobile-web-app-capable" content="yes">
 </head>
-  <!-- PWA: Add these 3 lines to your existing <head> -->
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#008000">
-<meta name="apple-mobile-web-app-capable" content="yes">
 
 <body>
 
@@ -23,6 +22,7 @@
       <h1>Shop & Add!</h1>
       <p>Pick <strong>2 items</strong> to find the total price 🛒</p>
       <button id="startBtn" class="btn-start">Let's Shop!</button>
+      <a href="/teacher.html" class="teacher-link">🔐 Teacher</a>
     </div>
   </div>
 
@@ -39,7 +39,6 @@
 
     <!-- Items Grid -->
     <div id="itemsGrid" class="items-grid">
-      <!-- Items loaded here by app.js -->
       <div class="loading">Loading items... 🛒</div>
     </div>
 
@@ -64,14 +63,6 @@
   </div>
 
   <script src="app.js"></script>
-  <!-- PWA: Register service worker -->
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js');
-    });
-  }
-</script>
 
 </body>
 </html>
