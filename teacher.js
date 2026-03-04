@@ -13,15 +13,16 @@ const ITEMS = [
 
 // Default price ranges (min, max in baht) per image filename
 const DEFAULT_PRICES = {
-  'item1.png': { min: 5,  max: 20 },
-  'item2.png': { min: 5,  max: 20 },
-  'item3.png': { min: 5,  max: 20 },
-  'item4.png': { min: 5,  max: 20 },
-  'item5.png': { min: 5,  max: 20 },
-  'item6.png': { min: 5,  max: 20 },
-  'item7.png': { min: 5,  max: 20 },
-  'item8.png': { min: 5,  max: 20 }
+  'item1.png': { min: 1, max: 5 },
+  'item2.png': { min: 1, max: 5 },
+  'item3.png': { min: 1, max: 5 },
+  'item4.png': { min: 1, max: 5 },
+  'item5.png': { min: 1, max: 5 },
+  'item6.png': { min: 1, max: 5 },
+  'item7.png': { min: 1, max: 5 },
+  'item8.png': { min: 1, max: 5 }
 };
+
 
 const DEFAULT_PIN = '1234';
 // ─────────────────────────────────────────────────────────────
