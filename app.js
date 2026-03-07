@@ -3,8 +3,6 @@ let selectedItems = [];
 let allItems = [];
 
 // ===== DOM REFERENCES =====
-const splashScreen = document.getElementById('splashScreen');
-const gameScreen = document.getElementById('gameScreen');
 const itemsGrid = document.getElementById('itemsGrid');
 const calcStrip = document.getElementById('calcStrip');
 const calcImg1 = document.getElementById('calcImg1');
@@ -12,7 +10,6 @@ const calcImg2 = document.getElementById('calcImg2');
 const calcPrice1 = document.getElementById('calcPrice1');
 const calcPrice2 = document.getElementById('calcPrice2');
 const calcTotal = document.getElementById('calcTotal');
-const startBtn = document.getElementById('startBtn');
 const resetBtn = document.getElementById('resetBtn');
 
 // ===== REGISTER SERVICE WORKER (PWA) =====
@@ -32,14 +29,9 @@ function getRandomPrice(filename) {
   return Math.floor(Math.random() * 5) + 1;
 }
 
-// ===== SPLASH → GAME =====
-startBtn.addEventListener('click', () => {
-  splashScreen.classList.add('hidden');
-  gameScreen.classList.remove('hidden');
-  loadItems();
-});
+// ===== LOAD ITEMS ON PAGE LOAD =====
+window.addEventListener('load', loadItems);
 
-// ===== LOAD ITEMS =====
 // ===== LOAD ITEMS =====
 async function loadItems() {
   try {
@@ -53,12 +45,10 @@ async function loadItems() {
 
     const active = JSON.parse(localStorage.getItem('active_items') || '[]');
 
-    // Try to filter by active, but fall back to ALL images if none match
     let filtered = active.length > 0
       ? data.images.filter(img => active.includes(img.filename))
       : data.images;
 
-    // Safety net — if active list exists but nothing matched, show everything
     if (filtered.length === 0) {
       filtered = data.images;
     }
@@ -75,7 +65,6 @@ async function loadItems() {
     console.error('Error loading items:', error);
   }
 }
-
 
 // ===== RENDER ITEMS =====
 function renderItems(items) {
