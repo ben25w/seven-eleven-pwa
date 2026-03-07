@@ -321,24 +321,11 @@ body {
 }
 
 .teacher-link {
-  display: inline-block;
-  margin-top: 16px;
-  padding: 10px 24px;
-  background: transparent;
-  border: 2px solid rgba(255,255,255,0.3);
-  color: rgba(255,255,255,0.6);
-  border-radius: 20px;
-  text-decoration: none;
-  font-size: 0.9rem;
-  letter-spacing: 0.05em;
-}
-/* Hidden teacher access link */
-.teacher-link {
   position: fixed;
   bottom: 12px;
   right: 12px;
   font-size: 0.75rem;
-  opacity: 0.2;
+  opacity: 0.5;
   text-decoration: none;
   color: #fff;
   z-index: 999;
@@ -346,5 +333,5 @@ body {
   line-height: 1;
 }
 .teacher-link:hover {
-  opacity: 0.6;
+  opacity: 0.9;
 }
