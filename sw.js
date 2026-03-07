@@ -1,5 +1,4 @@
-const CACHE_NAME = '7eleven-v3';
-
+const CACHE_NAME = '7eleven-v4';
 const ASSETS = [
   '/',
   '/index.html',
@@ -29,11 +28,24 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
-  // Never cache API calls — always go to network
-  if (event.request.url.includes('/api/')) {
+  const url = new URL(event.request.url);
+
+  // Never intercept API calls
+  if (url.pathname.startsWith('/api/')) {
     event.respondWith(fetch(event.request));
     return;
   }
+
+  // For navigation requests (HTML pages), always go to network first
+  // This prevents Safari's "redirect served by service worker" error
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).catch(() => caches.match('/index.html'))
+    );
+    return;
+  }
+
+  // For all other assets, try cache first then network
   event.respondWith(
     caches.match(event.request).then(cached => cached || fetch(event.request))
   );
