@@ -332,4 +332,19 @@ body {
   font-size: 0.9rem;
   letter-spacing: 0.05em;
 }
-
+/* Hidden teacher access link */
+.teacher-link {
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  font-size: 0.75rem;
+  opacity: 0.2;
+  text-decoration: none;
+  color: #fff;
+  z-index: 999;
+  padding: 6px;
+  line-height: 1;
+}
+.teacher-link:hover {
+  opacity: 0.6;
+}
