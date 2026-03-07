@@ -1,4 +1,4 @@
-const CACHE_NAME = '7eleven-v4';
+const CACHE_NAME = '7eleven-v5';
 const ASSETS = [
   '/',
   '/index.html',
