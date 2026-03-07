@@ -114,7 +114,7 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  padding-bottom: 220px; /* space for calc strip */
+  padding-bottom: 220px;
 }
 
 /* ===== HEADER ===== */
@@ -304,6 +304,26 @@ body {
   box-shadow: 0 8px 24px rgba(0,168,107,0.45);
 }
 
+/* ===== TEACHER LINK ===== */
+.teacher-link {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  font-size: 0.8rem;
+  color: #555;
+  text-decoration: none;
+  background: rgba(0,0,0,0.08);
+  border-radius: 8px;
+  padding: 6px 10px;
+  z-index: 999;
+  opacity: 0.7;
+}
+
+.teacher-link:hover {
+  opacity: 1;
+  background: rgba(0,0,0,0.15);
+}
+
 /* ===== ANIMATIONS ===== */
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -318,20 +338,4 @@ body {
 @keyframes slideUp {
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
-}
-
-.teacher-link {
-  position: fixed;
-  bottom: 12px;
-  right: 12px;
-  font-size: 0.75rem;
-  opacity: 0.5;
-  text-decoration: none;
-  color: #fff;
-  z-index: 999;
-  padding: 6px;
-  line-height: 1;
-}
-.teacher-link:hover {
-  opacity: 0.9;
 }
